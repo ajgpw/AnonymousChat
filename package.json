@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "libsodium-wrappers": "^0.7.15",
+    "tweetnacl": "^1.0.3",
     "tweetnacl-util": "^0.15.1",
     "vue": "^3.5.13",
     "vue-toastification": "^2.0.0-rc.5"

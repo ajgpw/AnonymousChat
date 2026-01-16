@@ -26,6 +26,11 @@ const fromBase64 = (str: string): Uint8Array => {
   return bytes;
 };
 
+type DecryptResult = {
+  message: string;
+  senderPub: string;
+};
+
 export class CryptoService {
   private keyPair: any;
 
@@ -86,7 +91,10 @@ export class CryptoService {
     }
   }
 
-  decrypt(encryptedDataBase64: string, senderPublicKeyBase64: string): string {
+  decrypt(
+    encryptedDataBase64: string,
+    senderPublicKeyBase64: string
+  ): DecryptResult {
     try {
       const encryptedData = fromBase64(encryptedDataBase64);
       const packetStr = new TextDecoder().decode(encryptedData);
@@ -107,7 +115,12 @@ export class CryptoService {
         throw new Error("Decryption failed");
       }
 
-      return new TextDecoder().decode(messageBuffer);
+      const decryptedMessage = new TextDecoder().decode(messageBuffer);
+
+      return {
+        message: decryptedMessage,
+        senderPub: senderPublicKeyBase64,
+      };
     } catch (e) {
       console.error("Decryption error:", e);
       throw new Error("復号化に失敗しました。");

@@ -7,9 +7,22 @@ import { useToast } from 'vue-toastification';
 const { cryptoService } = useCrypto();
 const toast = useToast();
 
+type Contact = {
+  publicKey: string;
+  name: string;
+  key?: string; // 修正: key プロパティを追加
+};
+
+type SenderInfo = {
+  key: string;
+  name?: string;
+};
+
 const encryptedInput = ref('');
+const senderInfo = ref<SenderInfo | null>(null);
 const decryptedMessage = ref('');
-const senderInfo = ref<{ key: string, name?: string } | null>(null);
+const contacts = ref<Contact[]>([]);
+const newContact = ref<Contact | null>(null);
 
 const handleDecrypt = () => {
   if (!cryptoService.value) {
@@ -19,7 +32,11 @@ const handleDecrypt = () => {
   if (!encryptedInput.value) return;
 
   try {
-    const result = cryptoService.value.decrypt(encryptedInput.value);
+    if (!senderInfo.value?.key) {
+      throw new Error("送信者の鍵が見つかりません。");
+    }
+
+    const result = cryptoService.value.decrypt(encryptedInput.value, senderInfo.value.key);
     
     // 成功時
     decryptedMessage.value = result.message;
@@ -40,6 +57,49 @@ const handleDecrypt = () => {
     senderInfo.value = null;
   }
 };
+
+const decryptMessage = () => {
+  if (!encryptedInput.value) {
+    console.error('Encrypted input is missing.');
+    return;
+  }
+
+  if (!senderInfo.value || !senderInfo.value.key) {
+    // 修正: senderInfo.value または senderInfo.value.key が undefined の場合に処理を中断
+    console.error('Sender key is missing.');
+    return;
+  }
+
+  if (!cryptoService.value) {
+    console.error('Crypto service is not initialized.');
+    return;
+  }
+
+  const result = cryptoService.value.decrypt(
+    encryptedInput.value,
+    senderInfo.value.key // 修正: senderInfo.value.key は必ず string 型
+  );
+
+  if (typeof result === 'object' && result !== null) {
+    decryptedMessage.value = result.message;
+
+    const knownContact = contacts.value.find(
+      c => c.publicKey === result.senderPub
+    );
+
+    if (!knownContact) {
+      newContact.value = {
+        name: 'Unknown',
+        publicKey: result.senderPub,
+      };
+    } else {
+      senderInfo.value.name = knownContact.name;
+    }
+  }
+};
+
+// decryptMessage を呼び出す例
+decryptMessage();
 </script>
 
 <template>

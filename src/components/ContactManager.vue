@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { type Contact, getAllContacts, saveContact, deleteContact } from '../utils/storage';
+import { type Contact, getAllContacts, saveContact } from '../utils/storage';
 import { useToast } from 'vue-toastification';
 
 const emit = defineEmits<{
@@ -38,11 +38,9 @@ const addContact = () => {
 };
 
 const removeContact = (index: number) => {
-  if (cst contact = contacts.value[index];
+  const contact = contacts.value[index]; // 修正: const 宣言を if 文の外に移動
+  if (contact) {
     contacts.value.splice(index, 1);
-    deleteContact(contact.publicKey, 1);
-    saveContacts(contacts.value);
-    toast.info("削除しました。");
   }
 };
 
