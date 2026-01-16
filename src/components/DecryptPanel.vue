@@ -111,7 +111,7 @@ decryptMessage();
       <textarea v-model="encryptedInput" placeholder="SNSからコピーした暗号文をここに貼り付け"></textarea>
     </div>
 
-    <button @click="handleDecrypt" class="btn-secondary" :disabled="!cryptoService">復号・検証する</button>
+    <button @click="handleDecrypt" class="btn-secondary">復号・検証する</button>
 
     <div v-if="decryptedMessage" class="result-area">
       <div class="verification-badge">

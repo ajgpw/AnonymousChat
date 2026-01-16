@@ -61,7 +61,7 @@ const copyResult = () => {
       <textarea v-model="message" placeholder="ここに入力した内容は暗号化されます..."></textarea>
     </div>
 
-    <button @click="handleEncrypt" class="btn-primary" :disabled="!cryptoService">暗号化を実行</button>
+    <button @click="handleEncrypt" class="btn-primary">暗号化を実行</button>
 
     <div v-if="encryptedResult" class="output-area">
       <label>暗号化データ (これをSNSに貼り付けてください)</label>
