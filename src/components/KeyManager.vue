@@ -88,16 +88,19 @@ const copyToClipboard = async (text: string) => {
 
         <div v-if="showPasswordInput" class="password-input-area">
           <label for="keyPassword">秘密鍵を保護するパスワード:</label>
-          <input 
-            type="password" 
-            id="keyPassword" 
-            v-model="password" 
-            placeholder="8文字以上のパスワード" 
-            @keyup.enter="currentAction === 'load' ? handleLoadKey() : handleGenerateKey()"
-          />
-          <button v-if="currentAction === 'load'" @click="handleLoadKey" class="btn-primary">読み込む</button>
-          <button v-if="currentAction === 'generate'" @click="handleGenerateKey" class="btn-secondary">生成して保存</button>
-          <button @click="showPasswordInput = false; password = ''; currentAction = null" class="btn-info">キャンセル</button>
+          <div class="password-controls">
+            <input 
+              type="password" 
+              id="keyPassword" 
+              v-model="password" 
+              placeholder="8文字以上のパスワード" 
+              @keyup.enter="currentAction === 'load' ? handleLoadKey() : handleGenerateKey()"
+            />
+            <button v-if="currentAction === 'load'" @click="handleLoadKey" class="btn-primary">読み込む</button>
+            <button v-if="currentAction === 'generate'" @click="handleGenerateKey" class="btn-secondary">生成して保存</button>
+            <button @click="showPasswordInput = false; password = ''; currentAction = null" class="btn-info">キャンセル</button>
+            <button v-if="storedKeyExists && currentAction === 'load'" @click="handleClearKey" class="btn-danger" title="パスワードを忘れた場合、保存済みの秘密鍵を削除できます">削除</button>
+          </div>
         </div>
       </div>
 
@@ -123,6 +126,20 @@ const copyToClipboard = async (text: string) => {
   border: 1px solid #dee2e6;
   border-radius: 5px;
 }
+
+.password-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.password-controls input {
+  flex: 1;
+  min-width: 200px;
+}
+
 .text-sm {
   font-size: 0.85rem;
   color: #6c757d;
