@@ -30,19 +30,34 @@ const handleDecrypt = () => {
     toast.error("復号するには、まず自分の鍵を生成または読み込んでください。");
     return;
   }
-  if (!encryptedInput.value) return;
+  if (!encryptedInput.value) {
+    toast.error("暗号化されたデータを入力してください。");
+    return;
+  }
 
   try {
-    if (!senderInfo.value?.key) {
-      throw new Error("送信者の鍵が見つかりません。");
+    // 暗号化データから送信者の公開鍵を抽出
+    let senderPublicKey: string;
+    
+    try {
+      const encryptedData = encryptedInput.value.trim();
+      const decodedData = atob(encryptedData);
+      const packet = JSON.parse(decodedData);
+      senderPublicKey = packet.senderPub;
+    } catch {
+      // JSONパース失敗時は、ユーザー入力から公開鍵を取得
+      if (!senderInfo.value?.key) {
+        throw new Error("送信者の公開鍵が見つかりません。暗号化されたデータが有効な形式か、送信者の公開鍵を手動で入力してください。");
+      }
+      senderPublicKey = senderInfo.value.key;
     }
 
-    const result = cryptoService.value.decrypt(encryptedInput.value, senderInfo.value.key);
+    const result = cryptoService.value.decrypt(encryptedInput.value, senderPublicKey);
     
     decryptedMessage.value = result.message;
     
-    const contacts = getAllContacts();
-    const knownContact = contacts.find(c => c.publicKey === result.senderPub);
+    const contactsList = getAllContacts();
+    const knownContact = contactsList.find(c => c.publicKey === result.senderPub);
     
     senderInfo.value = {
       key: result.senderPub,
@@ -106,6 +121,13 @@ decryptMessage();
     <div class="field">
       <label>受信した暗号化データ</label>
       <textarea v-model="encryptedInput" placeholder="SNSからコピーした暗号文をここに貼り付け"></textarea>
+      <p class="field-hint">💡 暗号化データに送信者の公開鍵が含まれている場合、自動的に抽出されます。</p>
+    </div>
+
+    <div class="field">
+      <label>送信者の公開鍵（オプション）</label>
+      <textarea v-model="senderInfo.key" placeholder="送信者の公開鍵をここに入力（自動抽出できない場合）"></textarea>
+      <p class="field-hint">💡 暗号化データから送信者の公開鍵が抽出できない場合は、ここに手動で入力してください。</p>
     </div>
 
     <button @click="handleDecrypt" class="btn-secondary">復号・検証する</button>
@@ -129,6 +151,13 @@ decryptMessage();
 <style scoped>
 .field {
   margin-bottom: 16px;
+}
+
+.field-hint {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 4px;
+  font-style: italic;
 }
 
 .result-area {
