@@ -20,7 +20,7 @@ type SenderInfo = {
 };
 
 const encryptedInput = ref('');
-const senderInfo = ref<SenderInfo | null>(null);
+const senderInfo = ref<SenderInfo>({ key: '', name: undefined });
 const decryptedMessage = ref('');
 const contacts = ref<Contact[]>([]);
 const newContact = ref<Contact | null>(null);
@@ -68,7 +68,7 @@ const handleDecrypt = () => {
   } catch (e: any) {
     toast.error(e.message);
     decryptedMessage.value = '';
-    senderInfo.value = null;
+    senderInfo.value = { key: '', name: undefined };
   }
 };
 
