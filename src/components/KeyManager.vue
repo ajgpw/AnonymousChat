@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, inject } from 'vue';
 import { useCrypto } from '../composables/useCrypto';
 import { hasStoredKey } from '../utils/storage';
 import { useToast } from 'vue-toastification';
 
-const { myPublicKey, isLoading, hasKeyPair, loadKeyPair, generateKeyPair, clearKeyPair } = useCrypto();
+const cryptoState = inject<ReturnType<typeof useCrypto>>('cryptoState');
+const { myPublicKey, isLoading, hasKeyPair, loadKeyPair, generateKeyPair, clearKeyPair } = cryptoState || useCrypto();
 const toast = useToast();
 
 const password = ref('');

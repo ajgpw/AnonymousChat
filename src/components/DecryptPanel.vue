@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 import { useCrypto } from '../composables/useCrypto';
 import { getAllContacts } from '../utils/storage';
 import { useToast } from 'vue-toastification';
 
-const { cryptoService, hasKeyPair } = useCrypto();
+const cryptoState = inject<ReturnType<typeof useCrypto>>('cryptoState');
+const { cryptoService, hasKeyPair } = cryptoState || useCrypto();
 const toast = useToast();
 
 type Contact = {

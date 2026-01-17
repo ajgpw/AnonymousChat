@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, inject } from 'vue';
 import { useCrypto } from '../composables/useCrypto';
 import { useToast } from 'vue-toastification';
 
@@ -7,7 +7,8 @@ const props = defineProps<{
   initialTargetKey?: string
 }>();
 
-const { cryptoService, hasKeyPair } = useCrypto();
+const cryptoState = inject<ReturnType<typeof useCrypto>>('cryptoState');
+const { cryptoService, hasKeyPair } = cryptoState || useCrypto();
 const toast = useToast();
 
 const targetPublicKey = ref('');

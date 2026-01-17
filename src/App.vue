@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, provide } from 'vue';
+import { useCrypto } from './composables/useCrypto';
 import KeyManager from './components/KeyManager.vue';
 import ContactManager from './components/ContactManager.vue';
 import EncryptPanel from './components/EncryptPanel.vue';
 import DecryptPanel from './components/DecryptPanel.vue';
+
+// 全コンポーネント間で共有する暗号鍵管理
+const cryptoState = useCrypto();
+provide('cryptoState', cryptoState);
 
 // 連絡先リストで選択された鍵を暗号化パネルに渡すための状態
 const selectedContactKey = ref('');
