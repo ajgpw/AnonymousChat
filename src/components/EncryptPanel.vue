@@ -7,7 +7,7 @@ const props = defineProps<{
   initialTargetKey?: string
 }>();
 
-const { cryptoService } = useCrypto();
+const { cryptoService, hasKeyPair } = useCrypto();
 const toast = useToast();
 
 const targetPublicKey = ref('');
@@ -20,8 +20,8 @@ watch(() => props.initialTargetKey, (newVal) => {
 });
 
 const handleEncrypt = () => {
-  if (!cryptoService.value) {
-    toast.error("まずは自分の鍵ペアを準備してください（上部セクション）。");
+  if (!hasKeyPair.value || !cryptoService.value) {
+    toast.error("まずは自分の鍵ペアを生成または読み込んでください（上部セクション）。");
     return;
   }
   if (!targetPublicKey.value) {

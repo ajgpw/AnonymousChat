@@ -4,7 +4,7 @@ import { useCrypto } from '../composables/useCrypto';
 import { getAllContacts } from '../utils/storage';
 import { useToast } from 'vue-toastification';
 
-const { cryptoService } = useCrypto();
+const { cryptoService, hasKeyPair } = useCrypto();
 const toast = useToast();
 
 type Contact = {
@@ -25,8 +25,8 @@ const contacts = ref<Contact[]>([]);
 const newContact = ref<Contact | null>(null);
 
 const handleDecrypt = () => {
-  if (!cryptoService.value) {
-    toast.error("復号するには、まず自分の鍵をロードしてください。");
+  if (!hasKeyPair.value || !cryptoService.value) {
+    toast.error("復号するには、まず自分の鍵を生成または読み込んでください。");
     return;
   }
   if (!encryptedInput.value) return;
