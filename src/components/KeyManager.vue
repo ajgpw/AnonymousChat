@@ -9,7 +9,7 @@ const { myPublicKey, isLoading, hasKeyPair, loadKeyPair, generateKeyPair, clearK
 const toast = useToast();
 
 const password = ref('');
-const showPasswordInput = ref(false); // 鍵生成/読み込み時のパスワード入力表示
+const showPasswordInput = ref(false);
 const currentAction = ref<'load' | 'generate' | null>(null);
 
 const storedKeyExists = ref(false);
@@ -20,7 +20,7 @@ onMounted(() => {
 
 watch(hasKeyPair, (newVal) => {
   if (newVal) {
-    password.value = ''; // 鍵がロードされたらパスワードをクリア
+    password.value = '';
     showPasswordInput.value = false;
     currentAction.value = null;
   }
@@ -35,7 +35,6 @@ const handleLoadKey = async () => {
   if (success) {
     storedKeyExists.value = true;
   } else {
-    // エラーはuseCryptoでToastされる
   }
 };
 
@@ -48,7 +47,6 @@ const handleGenerateKey = async () => {
   if (success) {
     storedKeyExists.value = true;
   } else {
-    // エラーはuseCryptoでToastされる
   }
 };
 
@@ -112,8 +110,7 @@ const copyToClipboard = async (text: string) => {
           <button @click="copyToClipboard(myPublicKey)" class="btn-primary">Copy</button>
         </div>
         <p class="text-sm text-gray-600">この公開鍵を相手と交換してください。</p>
-
-<button @click="handleClearKey" class="btn-danger">この端末から鍵を削除する</button>
+        <button @click="handleClearKey" class="btn-danger">この端末から鍵を削除する</button>
       </div>
     </div>
   </section>
@@ -128,12 +125,37 @@ const copyToClipboard = async (text: string) => {
   border-radius: 5px;
 }
 
+@media (max-width: 768px) {
+  .password-input-area {
+    padding: 12px;
+    margin-top: 12px;
+  }
+}
+
 .password-controls {
   display: flex;
   gap: 8px;
   margin-top: 10px;
   flex-wrap: wrap;
   align-items: center;
+}
+
+@media (max-width: 768px) {
+  .password-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .password-controls input {
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .password-controls button {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
 }
 
 .password-controls input {
@@ -146,5 +168,17 @@ const copyToClipboard = async (text: string) => {
   color: #6c757d;
   margin-top: -10px;
   margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+  .text-sm {
+    font-size: 0.8rem;
+    margin-top: -8px;
+    margin-bottom: 12px;
+  }
+}
+
+p {
+  word-break: break-word;
 }
 </style>

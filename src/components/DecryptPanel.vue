@@ -11,7 +11,7 @@ const toast = useToast();
 type Contact = {
   publicKey: string;
   name: string;
-  key?: string; // 修正: key プロパティを追加
+  key?: string;
 };
 
 type SenderInfo = {
@@ -39,10 +39,8 @@ const handleDecrypt = () => {
 
     const result = cryptoService.value.decrypt(encryptedInput.value, senderInfo.value.key);
     
-    // 成功時
     decryptedMessage.value = result.message;
     
-    // 送信者の特定
     const contacts = getAllContacts();
     const knownContact = contacts.find(c => c.publicKey === result.senderPub);
     
@@ -66,7 +64,6 @@ const decryptMessage = () => {
   }
 
   if (!senderInfo.value || !senderInfo.value.key) {
-    // 修正: senderInfo.value または senderInfo.value.key が undefined の場合に処理を中断
     console.error('Sender key is missing.');
     return;
   }
@@ -78,7 +75,7 @@ const decryptMessage = () => {
 
   const result = cryptoService.value.decrypt(
     encryptedInput.value,
-    senderInfo.value.key // 修正: senderInfo.value.key は必ず string 型
+    senderInfo.value.key
   );
 
   if (typeof result === 'object' && result !== null) {
@@ -99,13 +96,12 @@ const decryptMessage = () => {
   }
 };
 
-// decryptMessage を呼び出す例
 decryptMessage();
 </script>
 
 <template>
   <section>
-    <h2>📥 メッセージ受信 (Decrypt)</h2>
+    <h2>📥 メッセージ受信</h2>
 
     <div class="field">
       <label>受信した暗号化データ</label>
@@ -131,6 +127,10 @@ decryptMessage();
 </template>
 
 <style scoped>
+.field {
+  margin-bottom: 16px;
+}
+
 .result-area {
   margin-top: 25px;
   border: 1px solid #2ecc71;
@@ -139,11 +139,29 @@ decryptMessage();
   animation: fadeIn 0.5s;
 }
 
+@media (max-width: 768px) {
+  .result-area {
+    margin-top: 16px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+  }
+}
+
 .verification-badge {
   background-color: #2ecc71;
   color: white;
   padding: 8px 15px;
   font-weight: bold;
+  word-break: break-word;
+}
+
+@media (max-width: 768px) {
+  .verification-badge {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
 }
 
 .sender-key-detail {
@@ -153,6 +171,15 @@ decryptMessage();
   color: #666;
   font-family: monospace;
   border-bottom: 1px solid #ddd;
+  word-break: break-all;
+  line-height: 1.3;
+}
+
+@media (max-width: 768px) {
+  .sender-key-detail {
+    padding: 8px 12px;
+    font-size: 0.7rem;
+  }
 }
 
 .message-content {
@@ -161,5 +188,20 @@ decryptMessage();
   font-size: 1.1rem;
   white-space: pre-wrap;
   color: #333;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .message-content {
+    padding: 16px 12px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 </style>

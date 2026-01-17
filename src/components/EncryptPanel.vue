@@ -15,7 +15,6 @@ const targetPublicKey = ref('');
 const message = ref('');
 const encryptedResult = ref('');
 
-// 親コンポーネントからキーが渡されたらセットする
 watch(() => props.initialTargetKey, (newVal) => {
   if (newVal) targetPublicKey.value = newVal;
 });
@@ -50,7 +49,7 @@ const copyResult = () => {
 
 <template>
   <section>
-    <h2>📤 メッセージ送信 (Encrypt)</h2>
+    <h2>📤 メッセージ送信</h2>
     
     <div class="field">
       <label>相手の公開鍵</label>
@@ -75,24 +74,63 @@ const copyResult = () => {
 </template>
 
 <style scoped>
+.field {
+  margin-bottom: 16px;
+}
+
 .output-area {
   margin-top: 20px;
   animation: fadeIn 0.5s;
 }
+
+@media (max-width: 768px) {
+  .output-area {
+    margin-top: 16px;
+  }
+}
+
 .result-box {
   cursor: pointer;
   max-height: 150px;
   overflow-y: auto;
+  padding: 12px;
+  border-radius: 4px;
+  word-break: break-all;
+  white-space: pre-wrap;
+  line-height: 1.4;
+  font-size: 13px;
 }
+
+@media (max-width: 768px) {
+  .result-box {
+    max-height: 200px;
+    padding: 12px;
+    font-size: 12px;
+  }
+}
+
 .result-box:hover {
-  background-color: #d4edda;
+  background-color: #d4edda !important;
 }
+
+.result-box:active {
+  background-color: #c3e6cb !important;
+}
+
 .hint {
   font-size: 0.8rem;
   color: #666;
   text-align: right;
   margin-top: 4px;
 }
+
+@media (max-width: 768px) {
+  .hint {
+    font-size: 0.75rem;
+    text-align: center;
+  }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }

@@ -18,21 +18,52 @@ body {
   background-color: var(--color-bg-dark);
   color: var(--color-text-dark);
   line-height: 1.6;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 #app {
   max-width: 960px;
-  margin: 20px auto;
-  padding: 20px;
+  margin: 0 auto;
+  padding: 0;
   background-color: var(--color-bg-light);
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+  box-shadow: none;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 769px) {
+  #app {
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
 }
 
 h1, h2 {
   color: var(--color-info);
   text-align: center;
   margin-bottom: 25px;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 24px;
+    margin: 16px 0;
+    padding: 0 12px;
+  }
+
+  h2 {
+    font-size: 18px;
+    margin: 12px 0 16px 0;
+    padding: 0 12px;
+  }
 }
 
 section {
@@ -42,6 +73,17 @@ section {
   padding: 25px;
   margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 768px) {
+  section {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    padding: 16px;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
 }
 
 label {
@@ -62,11 +104,32 @@ select {
   border-radius: 5px;
   font-size: 1rem;
   box-sizing: border-box;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: white;
+}
+
+@media (max-width: 768px) {
+  input[type="text"],
+  input[type="password"],
+  textarea,
+  select {
+    font-size: 16px;
+    padding: 12px;
+    width: calc(100% - 24px);
+    border-radius: 4px;
+  }
 }
 
 textarea {
   resize: vertical;
   min-height: 80px;
+}
+
+@media (max-width: 768px) {
+  textarea {
+    min-height: 120px;
+  }
 }
 
 button {
@@ -76,12 +139,33 @@ button {
   cursor: pointer;
   font-size: 1rem;
   font-weight: bold;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.1s ease;
   margin-right: 10px;
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: manipulation;
+}
+
+button:active {
+  transform: scale(0.98);
 }
 
 button:last-child {
   margin-right: 0;
+}
+
+@media (max-width: 768px) {
+  button {
+    padding: 12px 16px;
+    font-size: 16px;
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 8px;
+  }
+
+  button:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .btn-primary {
@@ -123,6 +207,8 @@ button:last-child {
 .input-group {
   display: flex;
   margin-bottom: 15px;
+  gap: 0;
+  flex-wrap: wrap;
 }
 
 .input-group input {
@@ -131,13 +217,38 @@ button:last-child {
   border-right: none;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
+  min-width: 150px;
 }
 
 .input-group button {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  height: 40px; /* inputと同じ高さに調整 */
+  height: 40px;
   margin-right: 0;
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .input-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .input-group input,
+  .input-group button {
+    width: 100%;
+    margin-bottom: 0;
+    border-radius: 4px;
+  }
+
+  .input-group input {
+    margin-bottom: 0;
+  }
+
+  .input-group button {
+    margin-bottom: 0;
+  }
 }
 
 .result-box {
@@ -192,3 +303,26 @@ button:last-child {
 .Vue-Toastification__toast--error { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
 .Vue-Toastification__toast--info { background-color: #d1ecf1; color: #0c5460; border-color: #bee5eb; }
 .Vue-Toastification__toast--warning { background-color: #fff3cd; color: #856404; border-color: #ffeeba; }
+
+/* モバイル端末向けの追加最適化 */
+@media (max-width: 768px) {
+  .field {
+    margin-bottom: 14px;
+  }
+
+  label {
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+
+  hr {
+    margin: 12px 0;
+  }
+
+  /* キーボード時の自動スクロール対策 */
+  @supports (padding: max(0px)) {
+    body {
+      padding-bottom: max(0px, env(safe-area-inset-bottom));
+    }
+  }
+}

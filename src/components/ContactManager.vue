@@ -38,7 +38,7 @@ const addContact = () => {
 };
 
 const removeContact = (index: number) => {
-  const contact = contacts.value[index]; // 修正: const 宣言を if 文の外に移動
+  const contact = contacts.value[index];
   if (contact) {
     contacts.value.splice(index, 1);
   }
@@ -52,12 +52,12 @@ const selectContact = (key: string) => {
 
 <template>
   <section>
-    <h2>📖 連絡先リスト (Contacts)</h2>
+    <h2>📖 連絡先リスト</h2>
     
     <div class="add-contact-form">
       <div class="field">
         <label>名前 (表示用)</label>
-        <input type="text" v-model="newName" placeholder="例: Alice" />
+        <input type="text" v-model="newName" placeholder="例: 太郎" />
       </div>
       <div class="field">
         <label>相手の公開鍵</label>
@@ -91,36 +91,105 @@ const selectContact = (key: string) => {
   padding: 15px;
   border-radius: 5px;
 }
+
+@media (max-width: 768px) {
+  .add-contact-form {
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+}
+
 .contact-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
+
 .contact-list li {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
   border-bottom: 1px solid #eee;
+  gap: 8px;
+  flex-wrap: wrap;
 }
+
+@media (max-width: 768px) {
+  .contact-list li {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+  }
+}
+
 .contact-list li:last-child {
   border-bottom: none;
 }
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .contact-info {
+    margin-bottom: 8px;
+  }
+}
+
+.contact-info strong {
+  word-break: break-word;
+}
+
 .key-preview {
   font-family: monospace;
   color: #888;
-  font-size: 0.9rem;
-  margin-left: 10px;
+  font-size: 0.85rem;
+  word-break: break-all;
 }
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .actions button {
+    width: 100%;
+    padding: 8px 12px !important;
+    margin: 0 !important;
+  }
+}
+
 .actions button {
   padding: 5px 10px;
   font-size: 0.85rem;
 }
+
 .btn-sm {
   margin-left: 5px;
 }
+
+@media (max-width: 768px) {
+  .btn-sm {
+    margin-left: 0;
+  }
+}
+
 .empty-msg {
   text-align: center;
   color: #999;
+  padding: 20px 12px;
 }
 </style>
